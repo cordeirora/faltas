@@ -798,8 +798,50 @@
       flex-wrap:wrap;
     }
 
+    /* =====================================================
+       CARROSSEL HORIZONTAL DE MESES (somente mobile)
+       Em vez de empilhar os meses verticalmente, cada
+       month-card ocupa a largura toda da tela e os
+       meses ficam lado a lado, com rolagem horizontal
+       por swipe/scroll e "snap" para alinhar um mês
+       por vez. Nada aqui altera o desktop, que continua
+       usando a regra ".months{grid-template-columns:1fr 1fr}"
+       definida acima, fora desta media query.
+       ===================================================== */
+
     .months{
-      grid-template-columns:1fr;
+      display:flex;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      overflow-y:hidden;
+
+      gap:16px;
+
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      scroll-behavior:smooth;
+
+      padding-bottom:6px;
+      margin:0 -18px;
+      padding-left:18px;
+      padding-right:18px;
+    }
+
+    .months::-webkit-scrollbar{
+      display:none;
+    }
+
+    .months{
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+    }
+
+    .months .month-card{
+      flex:0 0 100%;
+      max-width:100%;
+
+      scroll-snap-align:start;
+      scroll-snap-stop:always;
     }
 
     header{
@@ -830,6 +872,12 @@
 
     .wrap{
       padding:20px 12px 48px;
+    }
+
+    .months{
+      margin:0 -12px;
+      padding-left:12px;
+      padding-right:12px;
     }
 
     header{
