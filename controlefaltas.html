@@ -1,0 +1,2660 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<title>Controle de Faltas — 6° Semestre</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+>
+
+<style>
+
+  :root{
+    /* =====================================================
+       PALETA NOTURNA
+       As cores coloridas originais foram preservadas.
+       ===================================================== */
+
+    --bg:#0D0F17;
+    --surface:#151824;
+    --ink:#F2F3F9;
+    --muted:#A7ABBE;
+    --faint:#73788E;
+    --border:#292D3D;
+
+    --brand:#3A32C9;
+    --brand-soft:#211F4D;
+
+    /* neutros alterados para o modo noturno */
+    --danger:#ff0000;
+    --danger-soft:#560006;
+    --good:#1ea529;
+    --past:#696D82;
+    --radius-lg:22px;
+    --radius-md:16px;
+    --radius-sm:9px;
+
+    --shadow-card:
+      0 1px 2px rgba(0,0,0,.30),
+      0 14px 30px -18px rgba(0,0,0,.65);
+  }
+
+
+  *{
+    box-sizing:border-box;
+  }
+
+
+  body{
+    margin:0;
+
+    background:var(--bg);
+
+    background-image:
+      radial-gradient(
+        circle at 4% 0%,
+        #181B3A 0%,
+        var(--bg) 38%
+      );
+
+    color:var(--ink);
+
+    font-family:'Inter',sans-serif;
+
+    -webkit-font-smoothing:antialiased;
+  }
+
+
+  .wrap{
+    max-width:1740px;
+
+    margin:0 auto;
+
+    padding:44px 56px 80px;
+  }
+
+
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:24px;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+  }
+
+
+  .titlebox .eyebrow{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    font-family:'Space Grotesk',sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+
+    color:var(--brand);
+
+    margin-bottom:10px;
+  }
+
+
+  .titlebox .eyebrow .dot{
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:var(--brand);
+  }
+
+
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:38px;
+    letter-spacing:-0.02em;
+
+    margin:0 0 8px;
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+
+  h1 .sem-badge{
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    font-weight:600;
+
+    background:var(--brand);
+    color:#fff;
+
+    padding:4px 10px;
+
+    border-radius:100px;
+
+    letter-spacing:.02em;
+    white-space:nowrap;
+  }
+
+
+  .subtitle{
+    font-size:15px;
+    color:var(--muted);
+
+    max-width:560px;
+
+    line-height:1.55;
+    margin:0;
+  }
+
+
+  .today-chip{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:6px;
+  }
+
+
+  .today-chip .val{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+
+  .today-chip .today-dot{
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:var(--good);
+
+    box-shadow:
+      0 0 0 4px #173D39;
+
+    flex:none;
+  }
+
+
+  .today-chip .lbl{
+    font-size:11.5px;
+
+    color:var(--faint);
+
+    text-transform:uppercase;
+    letter-spacing:.08em;
+
+    font-weight:600;
+  }
+
+
+  .today-chip .val{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:15px;
+
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    padding:8px 16px;
+
+    border-radius:999px;
+
+    box-shadow:var(--shadow-card);
+  }
+
+
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+
+    gap:10px;
+
+    margin:26px 0 34px;
+
+    padding:16px 20px;
+
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius-md);
+
+    box-shadow:var(--shadow-card);
+  }
+
+
+  .legend .legend-title{
+    font-size:12px;
+    font-weight:600;
+
+    color:var(--muted);
+
+    margin-right:6px;
+
+    align-self:center;
+  }
+
+
+  .legend-item{
+    display:flex;
+    align-items:center;
+
+    gap:7px;
+
+    font-size:12.5px;
+    font-weight:500;
+
+    color:var(--ink);
+
+    background:var(--bg);
+
+    border-radius:999px;
+
+    padding:6px 12px 6px 8px;
+  }
+
+
+  .legend-item .sw{
+    width:9px;
+    height:9px;
+
+    border-radius:3px;
+  }
+
+
+  .layout{
+    display:grid;
+
+    grid-template-columns:1fr 340px;
+
+    gap:24px;
+
+    align-items:start;
+  }
+
+
+  .months{
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:20px;
+  }
+
+
+  .month-card{
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius-lg);
+
+    box-shadow:var(--shadow-card);
+
+    padding:22px 22px 18px;
+  }
+
+
+  .month-card .month-head{
+    display:flex;
+
+    align-items:baseline;
+
+    justify-content:space-between;
+
+    margin-bottom:14px;
+  }
+
+
+  .month-card .month-head h2{
+    font-family:'Space Grotesk',sans-serif;
+
+    font-size:19px;
+
+    font-weight:600;
+
+    margin:0;
+
+    letter-spacing:-.01em;
+  }
+
+
+  .month-card .month-head span{
+    font-size:12px;
+
+    color:var(--faint);
+
+    font-weight:500;
+  }
+
+
+  .weekday-row{
+    display:grid;
+
+    grid-template-columns:repeat(5,1fr);
+
+    gap:6px;
+
+    margin-bottom:6px;
+  }
+
+
+  .weekday-row div{
+    font-size:10.5px;
+
+    font-weight:700;
+
+    color:var(--faint);
+
+    text-transform:uppercase;
+
+    letter-spacing:.05em;
+
+    text-align:center;
+
+    padding-bottom:2px;
+  }
+
+
+  .day-grid{
+    display:grid;
+
+    grid-template-columns:repeat(5,1fr);
+
+    gap:6px;
+  }
+
+
+  .day-cell{
+    min-height:88px;
+
+    border-radius:var(--radius-sm);
+
+    border:1px solid var(--border);
+
+    background:#11141E;
+
+    padding:6px 5px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:3px;
+  }
+
+
+  .day-cell.empty{
+    background:transparent;
+
+    border-color:transparent;
+  }
+
+
+  .day-cell.no-class{
+    background:#11141E;
+  }
+
+
+  .day-cell .num{
+    font-size:10.5px;
+
+    font-weight:600;
+
+    color:var(--faint);
+
+    padding:1px 2px 2px;
+  }
+
+
+  .day-cell.is-today{
+    border:1.5px solid var(--brand);
+
+    background:var(--brand-soft);
+  }
+
+
+  .day-cell.is-today .num{
+    color:#716BFF;
+  }
+
+
+  .day-cell.is-past .num{
+    color:#696D82;
+  }
+
+
+  .day-cell.is-past.no-class{
+    opacity:.55;
+  }
+
+
+  .day-cell.feriado{
+    background:
+      repeating-linear-gradient(
+        45deg,
+        #11141E 0px,
+        #11141E 6px,
+        #181B27 6px,
+        #181B27 7px
+      );
+
+    border:1px dashed var(--border);
+  }
+
+
+  .day-cell.feriado .num{
+    color:var(--faint);
+  }
+
+
+  .feriado-label{
+    margin-top:auto;
+
+    font-size:8.4px;
+
+    font-weight:800;
+
+    letter-spacing:.09em;
+
+    color:var(--faint);
+
+    text-transform:uppercase;
+  }
+
+
+  .block{
+    font-family:'Inter',sans-serif;
+
+    font-size:9.2px;
+
+    font-weight:600;
+
+    line-height:1.15;
+
+    padding:4px 6px;
+
+    border-radius:7px;
+
+    cursor:pointer;
+
+    border-left:3px solid transparent;
+
+    user-select:none;
+
+    transition:
+      transform .12s ease,
+      opacity .12s ease,
+      box-shadow .12s ease;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+  }
+
+
+  .block:hover{
+    transform:translateY(-1px);
+
+    box-shadow:
+      0 4px 10px -4px
+      rgba(0,0,0,.55);
+  }
+
+
+  .block.marked{
+    opacity:.5;
+
+    text-decoration:line-through;
+
+    border-left-color:var(--danger) !important;
+
+    background:var(--danger-soft) !important;
+
+    color:var(--danger) !important;
+  }
+
+
+  .block.locked{
+    cursor:not-allowed;
+  }
+
+
+  .block.locked:hover{
+    transform:none;
+
+    box-shadow:none;
+  }
+
+
+  .block.past{
+    background:
+      rgba(105,109,130,.16) !important;
+
+    border-left-color:
+      var(--past) !important;
+
+    color:
+      var(--past) !important;
+
+    cursor:not-allowed;
+  }
+
+
+  .block.past:hover{
+    transform:none;
+
+    box-shadow:none;
+  }
+
+
+  .block.exam{
+    cursor:not-allowed;
+
+    color:#e7a4ce;
+  }
+
+
+  .block.exam:hover{
+    transform:none;
+
+    box-shadow:none;
+  }
+
+
+  .sidebar{
+    position:sticky;
+
+    top:24px;
+
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius-lg);
+
+    box-shadow:var(--shadow-card);
+
+    padding:24px 22px 12px;
+  }
+
+
+  .sidebar h3{
+    font-family:'Space Grotesk',sans-serif;
+
+    font-size:19px;
+
+    margin:0 0 4px;
+
+    font-weight:600;
+  }
+
+
+  .sidebar .hint{
+    font-size:12px;
+
+    color:var(--muted);
+
+    line-height:1.5;
+
+    margin:0 0 18px;
+  }
+
+
+  .subj-row{
+    border-top:1px solid var(--border);
+
+    padding:15px 0;
+  }
+
+
+  .subj-row:first-of-type{
+    border-top:none;
+  }
+
+
+  .subj-row .top{
+    display:flex;
+
+    align-items:flex-start;
+
+    justify-content:space-between;
+
+    gap:10px;
+
+    margin-bottom:9px;
+  }
+
+
+  .subj-row .name{
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:9px;
+  }
+
+
+  .subj-row .dot{
+    width:9px;
+    height:9px;
+
+    border-radius:3px;
+
+    margin-top:4px;
+
+    flex:none;
+  }
+
+
+  .subj-row .name span{
+    font-size:13px;
+
+    font-weight:600;
+
+    line-height:1.3;
+  }
+
+
+  .subj-row .count{
+    text-align:right;
+
+    flex:none;
+  }
+
+
+  .subj-row .count b{
+    font-family:'Space Grotesk',sans-serif;
+
+    font-size:21px;
+
+    font-weight:700;
+
+    display:block;
+
+    line-height:1;
+
+    transition:color .15s ease;
+  }
+
+
+  .subj-row .count small{
+    font-size:9.5px;
+
+    color:var(--faint);
+
+    text-transform:uppercase;
+
+    letter-spacing:.05em;
+
+    font-weight:600;
+  }
+
+
+  .subj-row .bar-track{
+    height:5px;
+
+    border-radius:99px;
+
+    background:var(--bg);
+
+    overflow:hidden;
+
+    margin-bottom:6px;
+  }
+
+
+  .subj-row .bar-fill{
+    height:100%;
+
+    border-radius:99px;
+
+    transition:
+      width .2s ease,
+      background .2s ease;
+  }
+
+
+  .subj-row .meta{
+    display:flex;
+
+    justify-content:space-between;
+
+    font-size:11px;
+
+    color:var(--muted);
+  }
+
+
+  .subj-row.warn .count b{
+    color:var(--danger);
+  }
+
+
+  .subj-row.warn .meta{
+    color:var(--danger);
+
+    font-weight:600;
+  }
+
+
+  .foot-note{
+    font-size:11px;
+
+    color:var(--faint);
+
+    text-align:center;
+
+    padding:16px 4px 4px;
+
+    line-height:1.5;
+  }
+
+
+  /* =====================================================
+     RESPONSIVIDADE
+     (breakpoints originais — inalterados)
+     ===================================================== */
+
+  @media(max-width:1100px){
+
+    .layout{
+      grid-template-columns:1fr;
+    }
+
+    .sidebar{
+      position:static;
+    }
+
+  }
+
+
+  @media(max-width:760px){
+
+    .wrap{
+      padding:28px 18px 60px;
+    }
+
+    h1{
+      font-size:30px;
+      flex-wrap:wrap;
+    }
+
+    .months{
+      grid-template-columns:1fr;
+    }
+
+    header{
+      align-items:flex-start;
+    }
+
+    .today-chip{
+      align-items:flex-start;
+    }
+
+  }
+
+
+  /* =====================================================
+     BLOCO NOVO — OTIMIZAÇÃO EXCLUSIVA PARA IPHONE
+     Tudo aqui dentro só se aplica a telas pequenas
+     (mobile). Nenhuma regra abaixo é aplicada no
+     desktop nem sobrescreve nada fora deste breakpoint.
+     ===================================================== */
+
+  @media(max-width:480px){
+
+    body{
+      /* respeita a área segura do notch/home indicator */
+      padding-left:env(safe-area-inset-left);
+      padding-right:env(safe-area-inset-right);
+    }
+
+    .wrap{
+      padding:20px 12px 48px;
+    }
+
+    header{
+      gap:14px;
+      margin-bottom:4px;
+    }
+
+    .titlebox .eyebrow{
+      font-size:11px;
+      margin-bottom:8px;
+    }
+
+    h1{
+      font-size:23px;
+      gap:8px;
+      line-height:1.2;
+    }
+
+    h1 .sem-badge{
+      font-size:11px;
+      padding:3px 8px;
+    }
+
+    .today-chip{
+      width:100%;
+    }
+
+    .today-chip .val{
+      font-size:13px;
+      padding:7px 12px;
+    }
+
+    .legend{
+      gap:7px;
+      margin:18px 0 22px;
+      padding:12px 14px;
+    }
+
+    .legend .legend-title{
+      width:100%;
+      margin:0 0 4px;
+    }
+
+    .legend-item{
+      font-size:11.5px;
+      padding:5px 10px 5px 7px;
+    }
+
+    .layout{
+      gap:16px;
+    }
+
+    .month-card{
+      padding:14px 10px 12px;
+      border-radius:var(--radius-md);
+    }
+
+    .month-card .month-head{
+      margin-bottom:10px;
+    }
+
+    .month-card .month-head h2{
+      font-size:16px;
+    }
+
+    .month-card .month-head span{
+      font-size:11px;
+    }
+
+    .weekday-row{
+      gap:4px;
+      margin-bottom:4px;
+    }
+
+    .weekday-row div{
+      font-size:9px;
+    }
+
+    .day-grid{
+      gap:4px;
+    }
+
+    .day-cell{
+      min-height:64px;
+      padding:4px 3px;
+      gap:2px;
+      border-radius:7px;
+    }
+
+    .day-cell .num{
+      font-size:9.5px;
+      padding:0 1px 1px;
+    }
+
+    .feriado-label{
+      font-size:7.2px;
+      letter-spacing:.06em;
+    }
+
+    .block{
+      font-size:8.4px;
+      padding:5px 4px;
+      border-radius:6px;
+      line-height:1.1;
+      /* área de toque um pouco maior, sem mudar o
+         layout do desktop */
+      min-height:20px;
+      display:flex;
+      align-items:center;
+    }
+
+    .sidebar{
+      padding:18px 14px 8px;
+      border-radius:var(--radius-md);
+    }
+
+    .sidebar h3{
+      font-size:17px;
+    }
+
+    .sidebar .hint{
+      font-size:11.5px;
+      margin-bottom:14px;
+    }
+
+    .subj-row{
+      padding:12px 0;
+    }
+
+    .subj-row .name span{
+      font-size:12.5px;
+    }
+
+    .subj-row .count b{
+      font-size:18px;
+    }
+
+    .foot-note{
+      font-size:10px;
+    }
+
+  }
+
+
+  /* =====================================================
+     Ajuste adicional apenas para telas muito estreitas
+     (iPhone SE / mini ≈ 375px e abaixo)
+     ===================================================== */
+
+  @media(max-width:390px){
+
+    .day-cell{
+      min-height:58px;
+    }
+
+    .block{
+      font-size:7.8px;
+      padding:4px 3px;
+    }
+
+    .day-cell .num{
+      font-size:9px;
+    }
+
+  }
+
+
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <header>
+
+    <div class="titlebox">
+
+      <div class="eyebrow">
+        <span class="dot"></span>
+        Painel Acadêmico · Mackenzie
+      </div>
+
+      <h1>
+        Controle de Faltas
+
+        <span class="sem-badge">
+          6° Semestre
+        </span>
+      </h1>
+
+    </div>
+
+
+    <div class="today-chip">
+
+      <span class="lbl">
+        Hoje
+      </span>
+
+      <span class="val">
+
+        <span class="today-dot"></span>
+
+        <span id="today-label">
+        </span>
+
+      </span>
+
+    </div>
+
+  </header>
+
+
+  <div class="legend" id="legend">
+
+    <span class="legend-title">
+      Disciplinas
+    </span>
+
+  </div>
+
+
+  <div class="layout">
+
+    <div
+      class="months"
+      id="months">
+    </div>
+
+
+    <aside class="sidebar">
+
+      <h3>
+        Faltas
+      </h3>
+
+      <p class="hint">
+        Faltas restantes disponíveis em cada disciplina.
+      </p>
+
+      <div id="subj-list"></div>
+
+    </aside>
+
+  </div>
+
+
+  <p class="foot-note">
+
+    <br>
+    <br>
+
+    Controle de Faltas - 6° Semestre 2026
+
+  </p>
+
+</div>
+
+
+<script>
+
+  // =========================================================
+  // DATA ATUAL
+  // =========================================================
+
+  const now = new Date();
+
+  const today = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate()
+  );
+
+
+  function updateTodayLabel(){
+
+    const formatter =
+      new Intl.DateTimeFormat(
+        'pt-BR',
+        {
+          weekday:'long',
+          day:'numeric',
+          month:'long'
+        }
+      );
+
+    document.getElementById(
+      'today-label'
+    ).textContent =
+      formatter.format(today);
+
+  }
+
+
+  updateTodayLabel();
+
+
+  // =========================================================
+  // DADOS DAS MATÉRIAS
+  // =========================================================
+
+  const subjects = {
+
+    fh: {
+      short:'F. Humanos',
+      full:'Fatores Humanos em Sistemas Computacionais',
+      color:'#eb8b46',
+      allowed:4,
+      base:0
+    },
+
+    met: {
+      short:'Metodologia',
+      full:'Metodologia da Pesquisa em Computação',
+      color:'#e0b500',
+      allowed:4,
+      base:0
+    },
+
+    sig: {
+      short:'Sist. Gestão',
+      full:'Sistemas Integrados de Gestão',
+      color:'#f05ba2',
+      allowed:9,
+      base:0
+    },
+
+    cd: {
+      short:'Ciên. Dados',
+      full:'Ciência de Dados',
+      color:'#0db756',
+      allowed:4,
+      base:0
+    },
+
+    bd: {
+      short:'Banco Dados',
+      full:'Tópicos de Banco de Dados',
+      color:'#2c8fe0',
+      allowed:9,
+      base:0
+    },
+
+    ps: {
+      short:'Prog. Sist. I',
+      full:'Programação de Sistemas I',
+      color:'#8e4fd1',
+      allowed:9,
+      base:0
+    }
+
+  };
+
+
+  // =========================================================
+  // MATÉRIAS POR DIA
+  // =========================================================
+
+  const weekdaySubjects = {
+
+    1: ['fh','met','sig'],
+
+    2: ['cd','ps'],
+
+    3: ['sig','bd'],
+
+    4: ['bd','ps']
+
+  };
+
+
+  // =========================================================
+  // MESES
+  // =========================================================
+
+  const months = [
+
+    {
+      label:'Agosto',
+      year:2026,
+      m:7
+    },
+
+    {
+      label:'Setembro',
+      year:2026,
+      m:8
+    },
+
+    {
+      label:'Outubro',
+      year:2026,
+      m:9
+    },
+
+    {
+      label:'Novembro',
+      year:2026,
+      m:10
+    }
+
+  ];
+
+
+  const weekdayLabels = [
+
+    'Seg',
+    'Ter',
+    'Qua',
+    'Qui',
+    'Sex'
+
+  ];
+
+
+  // =========================================================
+  // FERIADOS
+  // =========================================================
+
+  const holidays = new Set([
+
+    '2026-09-07',
+
+    '2026-10-12',
+
+    '2026-10-13',
+
+    '2026-11-02'
+
+  ]);
+
+
+  // =========================================================
+  // FALTAS JÁ REGISTRADAS
+  // =========================================================
+
+  const registeredAbsences = new Set([
+
+    '2026-08-10-sig',
+    '2026-08-24-fh',
+    '2026-08-24-met',
+    '2026-08-17-sig',
+    '2026-08-24-sig',
+    '2026-08-31-sig'
+  
+  ]);
+
+
+  // =========================================================
+  // PROVAS
+  // =========================================================
+
+  const exams = {
+
+    '2026-09-28': [
+
+      {
+        key:'fh',
+        short:'P1 F. Humanos',
+        full:'P1 F. Humanos'
+      },
+
+      {
+        key:'sig',
+        short:'P1 Sist. Gestão',
+        full:'P1 Sist. Gestão'
+      }
+
+    ],
+
+    
+
+    '2026-09-29': [
+
+      {
+        key:'cd',
+        short:'P1 Ciên. Dados',
+        full:'P1 Ciên. Dados'
+      }
+
+    ],
+
+    '2026-09-22': [
+
+      {
+        key:'ps',
+        short:'P1 Prog. Sist. I',
+        full:'P1 Prog. Sist. I'
+      }
+
+    ],
+
+    '2026-11-23': [
+
+      {
+        key:'fh',
+        short:'P2 F. Humanos',
+        full:'P2 F. Humanos'
+      },
+
+      {
+        key:'sig',
+        short:'P2 Sist. Gestão',
+        full:'P2 Sist. Gestão'
+      }
+
+    ],
+
+    '2026-11-17': [
+
+  {
+    key:'cd',
+    short:'P2 Ciên. Dados',
+    full:'P2 Ciên. Dados'
+  },
+
+  {
+    key:'ps',
+    short:'P2 Prog. Sist. I',
+    full:'P2 Prog. Sist. I'
+  }
+
+]
+
+  };
+
+
+  // =========================================================
+  // CATEGORIAS DE EVENTOS
+  // =========================================================
+
+  const eventCategories = {
+
+    atividades: {
+      color:'#6f32ab'
+    },
+
+    projetos: {
+      color:'#87c3ed'
+    },
+
+    tecnologia: {
+      color:'#16A34A'
+    }
+
+  };
+
+
+  // =========================================================
+  // CORES DA SEMANA DE TECNOLOGIA
+  // =========================================================
+
+  const tecnologiaColors = {
+
+    background:'#0d5a31',
+
+    border:'#aae0c1',
+
+    text:'#aae0c1'
+
+  };
+
+
+  // =========================================================
+  // EVENTOS
+  // =========================================================
+
+  const events = {
+
+    '2026-08-12': {
+      type:'atividades',
+      subjects:['sig']
+    },
+
+    '2026-08-19': {
+      type:'atividades',
+      subjects:['sig']
+    },
+
+    '2026-08-26': {
+      type:'atividades',
+      subjects:['sig']
+    },
+
+    '2026-09-02': {
+      type:'atividades',
+      subjects:['sig']
+    },
+
+    '2026-09-14': {
+      type:'atividades',
+      subjects:['sig']
+    },
+
+    '2026-09-21': {
+      type:'atividades',
+      subjects:['sig']
+    },
+
+    '2026-10-19': {
+      type:'atividades',
+      subjects:['sig']
+    },
+
+    '2026-10-26': {
+      type:'atividades',
+      subjects:['sig']
+    },
+
+    '2026-11-04': {
+      type:'atividades',
+      subjects:['sig']
+    },
+
+    '2026-11-11': {
+      type:'atividades',
+      subjects:['sig']
+    },
+
+    '2026-09-24': {
+      type:'projetos',
+      subjects:['ps']
+    },
+
+    '2026-09-28': {
+      type:'projetos',
+      subjects:['met']
+    },
+
+    '2026-10-01': {
+      type:'projetos',
+      subjects:['ps']
+    },
+
+    '2026-11-09': {
+      type:'projetos',
+      subjects:['fh']
+    },
+
+    '2026-11-16': {
+      type:'projetos',
+      subjects:['fh','met']
+    },
+
+    '2026-11-19': {
+      type:'projetos',
+      subjects:['ps']
+    },
+
+    '2026-11-23': {
+      type:'projetos',
+      subjects:['met']
+    },
+
+    '2026-11-26': {
+      type:'projetos',
+      subjects:['ps']
+    },
+
+    '2026-10-05': {
+      type:'tecnologia',
+      subjects:['fh','sig']
+    },
+
+    '2026-10-06': {
+      type:'tecnologia',
+      subjects:['cd']
+    },
+
+    '2026-10-07': {
+      type:'tecnologia',
+      subjects:['sig']
+    }
+
+  };
+
+
+  // =========================================================
+  // CONTADOR DE FALTAS CLICADAS
+  // =========================================================
+
+  const markedCount = {
+
+fh:0,
+met:0,
+sig:0,
+cd:0,
+bd:0,
+ps:0
+
+};
+
+
+// Conta automaticamente as faltas já registradas
+registeredAbsences.forEach(absence => {
+
+const parts = absence.split('-');
+
+const subjectKey = parts[3];
+
+if (
+  markedCount.hasOwnProperty(subjectKey)
+) {
+
+  markedCount[subjectKey]++;
+
+}
+
+});
+
+
+  // =========================================================
+  // HEX -> RGBA
+  // =========================================================
+
+  function hexA(hex, a){
+
+    const r =
+      parseInt(
+        hex.slice(1,3),
+        16
+      );
+
+    const g =
+      parseInt(
+        hex.slice(3,5),
+        16
+      );
+
+    const b =
+      parseInt(
+        hex.slice(5,7),
+        16
+      );
+
+    return `rgba(${r},${g},${b},${a})`;
+
+  }
+
+
+  // =========================================================
+  // LEGENDA
+  // =========================================================
+
+  const legendEl =
+    document.getElementById('legend');
+
+
+  Object.values(subjects).forEach(s=>{
+
+    const el =
+      document.createElement('div');
+
+    el.className =
+      'legend-item';
+
+    el.innerHTML = `
+
+      <span
+        class="sw"
+        style="background:${s.color}">
+      </span>
+
+      ${s.short}
+
+    `;
+
+    legendEl.appendChild(el);
+
+  });
+
+
+  // =========================================================
+  // CALENDÁRIOS
+  // =========================================================
+
+  const monthsEl =
+    document.getElementById('months');
+
+
+  function buildMonth({
+    label,
+    year,
+    m
+  }){
+
+    const card =
+      document.createElement('div');
+
+    card.className =
+      'month-card';
+
+
+    const head =
+      document.createElement('div');
+
+    head.className =
+      'month-head';
+
+    head.innerHTML = `
+
+      <h2>
+        ${label}
+      </h2>
+
+      <span>
+        ${year}
+      </span>
+
+    `;
+
+    card.appendChild(head);
+
+
+    const wrow =
+      document.createElement('div');
+
+    wrow.className =
+      'weekday-row';
+
+
+    weekdayLabels.forEach(w=>{
+
+      const d =
+        document.createElement('div');
+
+      d.textContent =
+        w;
+
+      wrow.appendChild(d);
+
+    });
+
+
+    card.appendChild(wrow);
+
+
+    const grid =
+      document.createElement('div');
+
+    grid.className =
+      'day-grid';
+
+
+    const first =
+      new Date(
+        year,
+        m,
+        1
+      );
+
+
+    const daysInMonth =
+      new Date(
+        year,
+        m + 1,
+        0
+      ).getDate();
+
+
+    const leading =
+      first.getDay() === 0 ||
+      first.getDay() === 6
+        ? 0
+        : first.getDay() - 1;
+
+
+    for(
+      let i = 0;
+      i < leading;
+      i++
+    ){
+
+      const empty =
+        document.createElement('div');
+
+      empty.className =
+        'day-cell empty';
+
+      grid.appendChild(empty);
+
+    }
+
+
+    for(
+      let d = 1;
+      d <= daysInMonth;
+      d++
+    ){
+
+      const date =
+        new Date(
+          year,
+          m,
+          d
+        );
+
+
+      const wd =
+        date.getDay();
+
+
+      if(
+        wd === 0 ||
+        wd === 6
+      ){
+
+        continue;
+
+      }
+
+
+      const cell =
+        document.createElement('div');
+
+
+      let subjKeys =
+        weekdaySubjects[wd] || [];
+
+
+      if(
+
+        year === 2026 &&
+
+        (
+
+          (
+            m === 7 &&
+            d >= 3 &&
+            d <= 6
+          )
+
+          ||
+
+          (
+            m === 10 &&
+            d === 30
+          )
+
+        )
+
+      ){
+
+        subjKeys = [];
+
+      }
+
+
+      const holidayKey =
+        `${year}-${String(
+          m + 1
+        ).padStart(2,'0')}-${String(
+          d
+        ).padStart(2,'0')}`;
+
+
+      const isHoliday =
+        holidays.has(
+          holidayKey
+        );
+
+
+      const dayExams =
+        exams[holidayKey] || [];
+
+
+      const dayEvent =
+        events[holidayKey] || null;
+
+
+      cell.className =
+        'day-cell' +
+        (
+          subjKeys.length
+            ? ''
+            : ' no-class'
+        );
+
+
+      if(
+        date.getTime() ===
+        today.getTime()
+      ){
+
+        cell.classList.add(
+          'is-today'
+        );
+
+      }
+
+
+      const isPast =
+        date < today;
+
+
+      if(isPast){
+
+        cell.classList.add(
+          'is-past'
+        );
+
+      }
+
+
+      if(isHoliday){
+
+        cell.classList.add(
+          'feriado'
+        );
+
+      }
+
+
+      const num =
+        document.createElement('div');
+
+      num.className =
+        'num';
+
+      num.textContent =
+        d;
+
+      cell.appendChild(num);
+
+
+      if(isHoliday){
+
+        const holidayLabel =
+          document.createElement('div');
+
+        holidayLabel.className =
+          'feriado-label';
+
+        holidayLabel.textContent =
+          'Feriado';
+
+        cell.appendChild(
+          holidayLabel
+        );
+
+      }
+
+      else {
+
+        subjKeys.forEach(
+          (key, idx)=>{
+
+            const exam =
+              dayExams.find(
+                exam =>
+                  exam.key === key
+              );
+
+
+            const event =
+              dayEvent &&
+              dayEvent.subjects.includes(key)
+                ? dayEvent
+                : null;
+
+
+            const block =
+              document.createElement('div');
+
+
+            if(exam){
+
+              block.className =
+                'block exam';
+
+              block.textContent =
+                exam.short;
+
+              block.title =
+                exam.full;
+
+              /* COR DE PROVA ORIGINAL PRESERVADA */
+              block.style.background =
+                '#792b5a';
+
+              block.style.borderLeftColor =
+                '#e7a4ce';
+
+            }
+
+            else{
+
+              const s =
+                subjects[key];
+
+
+              block.className =
+                'block';
+
+
+              block.textContent =
+                s.short;
+
+
+              let blockColor =
+                s.color;
+
+
+              if(event){
+
+                blockColor =
+                  eventCategories[
+                    event.type
+                  ].color;
+
+              }
+
+
+              if(isPast){
+
+                block.classList.add(
+                  'past'
+                );
+
+                block.classList.add(
+                  'locked'
+                );
+
+
+                /*
+                 * Apenas os tons neutros foram
+                 * alterados para o modo noturno.
+                 */
+                block.style.background =
+                  'rgba(105,109,130,.16)';
+
+      
+                block.title =
+                  'Aula já realizada — não é possível alterar.';
+
+              }
+
+
+              else{
+
+                // =====================================================
+                // ATIVIDADES
+                // COR ORIGINAL PRESERVADA
+                // =====================================================
+
+                if(
+                  event &&
+                  event.type === 'atividades'
+                ){
+
+                  block.style.background =
+                    '#4b2775';
+
+                  block.style.borderLeftColor =
+                    '#c7a8ea';
+
+                  block.style.color =
+                    '#c7a8ea';
+
+                }
+
+
+                // =====================================================
+                // PROJETOS
+                // COR ORIGINAL PRESERVADA
+                // =====================================================
+
+                else if(
+                  event &&
+                  event.type === 'projetos'
+                ){
+
+                  block.style.background =
+                    '#154479';
+
+                  block.style.borderLeftColor =
+                    '#9bc2e4';
+
+                  block.style.color =
+                    '#9bc2e4';
+
+                }
+
+
+                // =====================================================
+                // SEMANA DE TECNOLOGIA
+                // CORES ORIGINAIS PRESERVADAS
+                // =====================================================
+
+                else if(
+                  event &&
+                  event.type === 'tecnologia'
+                ){
+
+                  block.style.background =
+                    tecnologiaColors.background;
+
+                  block.style.borderLeftColor =
+                    tecnologiaColors.border;
+
+                  block.style.color =
+                    tecnologiaColors.text;
+
+                }
+
+
+                // =====================================================
+                // MATÉRIA NORMAL
+                // COR DA MATÉRIA ORIGINAL PRESERVADA
+                // =====================================================
+
+                else{
+
+                  block.style.background =
+                    hexA(
+                      blockColor,
+                      .14
+                    );
+
+                  block.style.borderLeftColor =
+                    blockColor;
+
+                  block.style.color =
+                    blockColor;
+
+                }
+
+              }
+
+
+              block.dataset.id =
+                `${year}-${m}-${d}-${key}-${idx}`;
+
+
+              block.dataset.key =
+                key;
+
+
+              const absenceKey =
+                `${holidayKey}-${key}`;
+
+
+              if(
+                registeredAbsences.has(
+                  absenceKey
+                )
+              ){
+
+                block.classList.remove(
+                  'past'
+                );
+
+                block.classList.add(
+                  'marked'
+                );
+
+                block.classList.add(
+                  'locked'
+                );
+
+
+                block.title =
+                  'Falta já registrada — não é possível alterar.';
+
+              }
+
+
+              else if(isPast){
+
+                // Não adiciona clique.
+
+              }
+
+
+              else if(
+                event &&
+                (
+                  event.type === 'projetos' ||
+                  event.type === 'tecnologia'
+                )
+              ){
+
+                block.classList.add(
+                  'locked'
+                );
+
+
+                block.title =
+                  event.type === 'projetos'
+                    ? 'Projeto — não é possível registrar falta.'
+                    : 'Semana de Tecnologia — não é possível registrar falta.';
+
+              }
+
+
+              else{
+
+                const used =
+                  subjects[key].base +
+                  markedCount[key];
+
+
+                if(
+                  used >= subjects[key].allowed
+                ){
+
+                  block.classList.add(
+                    'locked'
+                  );
+
+
+                  block.title =
+                    'Limite de faltas atingido — não é possível registrar novas faltas.';
+
+                }
+
+                else{
+
+                  block.addEventListener(
+                    'click',
+                    ()=>toggleBlock(block)
+                  );
+
+                  block.dataset.clickBound =
+                    'true';
+
+                }
+
+              }
+
+            }
+
+
+            cell.appendChild(
+              block
+            );
+
+          }
+        );
+
+
+        dayExams
+          .filter(
+            exam =>
+              !subjKeys.includes(
+                exam.key
+              )
+          )
+          .forEach(exam=>{
+
+            const block =
+              document.createElement('div');
+
+
+            block.className =
+              'block exam locked';
+
+
+            block.textContent =
+              exam.short;
+
+
+            block.title =
+              exam.full;
+
+            cell.appendChild(
+              block
+            );
+
+          });
+
+      }
+
+
+      grid.appendChild(
+        cell
+      );
+
+    }
+
+
+    card.appendChild(
+      grid
+    );
+
+
+    monthsEl.appendChild(
+      card
+    );
+
+  }
+
+
+  // =========================================================
+  // CRIAR MESES
+  // =========================================================
+
+  months.forEach(
+    buildMonth
+  );
+
+
+  // =========================================================
+  // INTERAÇÃO DE FALTAS
+  // =========================================================
+
+  function toggleBlock(block){
+
+    if(
+      block.classList.contains(
+        'locked'
+      )
+    ){
+
+      return;
+
+    }
+
+
+    const key =
+      block.dataset.key;
+
+
+    const marking =
+      !block.classList.contains(
+        'marked'
+      );
+
+
+    if(marking){
+
+      const used =
+        subjects[key].base +
+        markedCount[key];
+
+
+      if(
+        used >= subjects[key].allowed
+      ){
+
+        lockSubjectBlocks(key);
+
+        updateSidebar();
+
+        return;
+
+      }
+
+    }
+
+
+    block.classList.toggle(
+      'marked'
+    );
+
+
+    markedCount[key] +=
+      marking
+        ? 1
+        : -1;
+
+
+    updateSidebar();
+
+
+    if(marking){
+
+      const used =
+        subjects[key].base +
+        markedCount[key];
+
+
+      if(
+        used >= subjects[key].allowed
+      ){
+
+        lockSubjectBlocks(key);
+
+      }
+
+    }
+
+    else{
+
+      unlockSubjectBlocks(key);
+
+    }
+
+  }
+
+
+  // =========================================================
+  // BLOQUEAR BLOCOS DE UMA MATÉRIA
+  // =========================================================
+
+  function lockSubjectBlocks(key){
+
+    const blocks =
+      document.querySelectorAll(
+        `.block[data-key="${key}"]`
+      );
+
+
+    blocks.forEach(block=>{
+
+      if(
+        !block.classList.contains(
+          'marked'
+        )
+      ){
+
+        if(
+          !block.classList.contains(
+            'past'
+          ) &&
+          !block.classList.contains(
+            'exam'
+          )
+        ){
+
+          block.classList.add(
+            'locked'
+          );
+
+
+          block.title =
+            'Limite de faltas atingido — não é possível registrar novas faltas.';
+
+        }
+
+      }
+
+    });
+
+  }
+
+
+  // =========================================================
+  // DESBLOQUEAR BLOCOS DE UMA MATÉRIA
+  // =========================================================
+
+  function unlockSubjectBlocks(key){
+
+    const used =
+      subjects[key].base +
+      markedCount[key];
+
+
+    if(
+      used >= subjects[key].allowed
+    ){
+
+      return;
+
+    }
+
+
+    const blocks =
+      document.querySelectorAll(
+        `.block[data-key="${key}"]`
+      );
+
+
+    blocks.forEach(block=>{
+
+      if(
+        !block.classList.contains(
+          'marked'
+        ) &&
+        !block.classList.contains(
+          'past'
+        ) &&
+        !block.classList.contains(
+          'exam'
+        )
+      ){
+
+        if(
+          block.title ===
+          'Limite de faltas atingido — não é possível registrar novas faltas.'
+        ){
+
+          block.classList.remove(
+            'locked'
+          );
+
+          block.title =
+            '';
+
+          if(
+            !block.dataset.clickBound
+          ){
+
+            block.addEventListener(
+              'click',
+              ()=>toggleBlock(block)
+            );
+
+            block.dataset.clickBound =
+              'true';
+
+          }
+
+        }
+
+      }
+
+    });
+
+  }
+
+
+  // =========================================================
+  // SIDEBAR
+  // =========================================================
+
+  const subjList =
+    document.getElementById(
+      'subj-list'
+    );
+
+
+  const rows = {};
+
+
+  Object.entries(subjects)
+    .forEach(
+      ([key, s])=>{
+
+        const row =
+          document.createElement('div');
+
+
+        row.className =
+          'subj-row';
+
+
+        row.innerHTML = `
+
+          <div class="top">
+
+            <div class="name">
+
+              <span
+                class="dot"
+                style="background:${s.color}">
+              </span>
+
+              <span>
+                ${s.full}
+              </span>
+
+            </div>
+
+
+            <div class="count">
+
+              <b
+                id="rem-${key}">
+              </b>
+
+              <small>
+                restantes
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div class="bar-track">
+
+            <div
+              class="bar-fill"
+              id="bar-${key}"
+              style="background:${s.color}">
+            </div>
+
+          </div>
+
+
+          <div class="meta">
+
+            <span
+              id="meta-${key}">
+            </span>
+
+            <span>
+              limite: ${s.allowed}
+            </span>
+
+          </div>
+
+        `;
+
+
+        subjList.appendChild(
+          row
+        );
+
+
+        rows[key] =
+          row;
+
+      }
+    );
+
+
+  // =========================================================
+  // ATUALIZAR SIDEBAR
+  // =========================================================
+
+  function updateSidebar(){
+
+    Object.entries(subjects)
+      .forEach(
+        ([key, s])=>{
+
+          const used =
+            s.base +
+            markedCount[key];
+
+
+          const remaining =
+            Math.max(
+              s.allowed - used,
+              0
+            );
+
+
+          const pct =
+            Math.min(
+              (
+                used /
+                s.allowed
+              ) * 100,
+              100
+            );
+
+
+          document.getElementById(
+            `rem-${key}`
+          ).textContent =
+            remaining;
+
+
+          document.getElementById(
+            `bar-${key}`
+          ).style.width =
+            pct + '%';
+
+
+          document.getElementById(
+            `meta-${key}`
+          ).textContent =
+            `${used} de ${s.allowed} faltas usadas`;
+
+
+          const low =
+            remaining <= 1;
+
+
+          rows[key].classList.toggle(
+            'warn',
+            low
+          );
+
+
+          document.getElementById(
+            `bar-${key}`
+          ).style.background =
+            low
+              ? 'var(--danger)'
+              : s.color;
+
+        }
+      );
+
+  }
+
+
+  // =========================================================
+  // INICIAR SIDEBAR
+  // =========================================================
+
+  updateSidebar();
+
+
+  // =========================================================
+  // ATUALIZAÇÃO AUTOMÁTICA DA DATA
+  // =========================================================
+
+  function checkDateChange(){
+
+    const current =
+      new Date();
+
+
+    const currentDay =
+      new Date(
+        current.getFullYear(),
+        current.getMonth(),
+        current.getDate()
+      );
+
+
+    if(
+      currentDay.getTime() !==
+      today.getTime()
+    ){
+
+      location.reload();
+
+    }
+
+  }
+
+
+  setInterval(
+    checkDateChange,
+    30000
+  );
+
+</script>
+
+</body>
+</html>
