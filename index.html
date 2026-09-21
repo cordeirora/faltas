@@ -1421,7 +1421,7 @@
     full:'P2 Prog. Sist. I'
   }
 
-]
+],
 
     '2026-11-19': [
 
@@ -1431,7 +1431,7 @@
         full:'P2 Banco Dados'
       }
 
-    ],
+    ]
 
   };
 
@@ -1860,18 +1860,20 @@ if (
         subjKeys = [];
 
       }
-      
-      // COLE AQUI O TRECHO DAS REMOÇÕES
-      
+
+
+      // Remoções específicas solicitadas para novembro.
+      // Somente estas matérias/datas são removidas; os demais eventos
+      // e matérias do calendário permanecem inalterados.
       const removals = {
         '2026-11-24': ['cd'],
         '2026-11-25': ['sig', 'bd'],
         '2026-11-26': ['bd']
       };
-      
+
       const dateRemovals =
         removals[`${year}-${String(m + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`] || [];
-      
+
       subjKeys = subjKeys.filter(
         key => !dateRemovals.includes(key)
       );
