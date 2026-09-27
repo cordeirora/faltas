@@ -1332,7 +1332,8 @@
     '2026-09-14-met',
     '2026-09-16-bd',
     '2026-09-21-fh',
-    '2026-09-21-met'
+    '2026-09-21-met',
+    '2026-09-24-ps'
   
   ]);
 
@@ -1410,12 +1411,6 @@
     '2026-11-17': [
 
   {
-    key:'cd',
-    short:'P2 Ciên. Dados',
-    full:'P2 Ciên. Dados'
-  },
-
-  {
     key:'ps',
     short:'P2 Prog. Sist. I',
     full:'P2 Prog. Sist. I'
@@ -1431,7 +1426,17 @@
         full:'P2 Banco Dados'
       }
 
-    ]
+    ],
+
+    '2026-11-24': [
+
+  {
+    key:'cd',
+    short:'P2 Ciên. Dados',
+    full:'P2 Ciên. Dados'
+  }
+
+]
 
   };
 
@@ -1866,7 +1871,8 @@ if (
       // Somente estas matérias/datas são removidas; os demais eventos
       // e matérias do calendário permanecem inalterados.
       const removals = {
-        '2026-11-24': ['cd'],
+        '2026-09-23': ['bd'],
+        '2026-11-18': ['bd'],
         '2026-11-25': ['sig', 'bd'],
         '2026-11-26': ['bd']
       };
